@@ -11,14 +11,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import jwt
 from passlib.context import CryptContext
-from .get_stock_data import StockDataResponse, StockDataService
-from .home_data import *
+from get_stock_data import StockDataResponse, StockDataService
+from home_data import *
 from dotenv import load_dotenv
-from .stock_fetcher import fetch_and_store_stock_data
-from .stock_data import get_onday_data as get_twelvedata_stock_data
-from .time_series_data import TimeSeriesDataService
-from .risk_prediction import RiskPredictionService
-from .stock_data import get_onday_data
+from stock_fetcher import fetch_and_store_stock_data
+from stock_data import get_onday_data as get_twelvedata_stock_data
+from time_series_data import TimeSeriesDataService
+from risk_prediction import RiskPredictionService
+from stock_data import get_onday_data
 
 load_dotenv()
 
