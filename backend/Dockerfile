@@ -28,4 +28,4 @@ COPY ./app ./app
 # Expose the port FastAPI runs on
 EXPOSE 8000
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
