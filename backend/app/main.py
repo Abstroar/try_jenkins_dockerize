@@ -185,7 +185,3 @@ def fetch_stock(symbol):
     except Exception as e:
         print(f"Error in fetch_stock: {str(e)}")
         return {"status": "error", "message": "Internal server error"}
-
-
-
-
