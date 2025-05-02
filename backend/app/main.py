@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from datetime import datetime, timedelta
 import requests
 import os
-import tisme
+
 import logging
 from typing import Optional, List
 from fastapi.middleware.cors import CORSMiddleware
