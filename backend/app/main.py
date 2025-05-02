@@ -91,10 +91,10 @@ class StockDataService:
             
             current_date = datetime.now()
             
-            if start > current_date:
-                raise ValueError(f"Start date {start_date} is in the future. Please use a date up to today.")
-            if end > current_date:
-                raise ValueError(f"End date {end_date} is in the future. Please use a date up to today.")
+            # if start > current_date:
+            #     raise ValueError(f"Start date {start_date} is in the future. Please use a date up to today.")
+            # if end > current_date:
+            #     raise ValueError(f"End date {end_date} is in the future. Please use a date up to today.")
             
             # Get available date range
             earliest_date, latest_date = self.get_available_date_range(symbol)
@@ -113,12 +113,12 @@ class StockDataService:
             #     return self.get_stock_data_from_yfinance(start_date, end_date, symbol)
             
             # Adjust dates to available range if needed
-            if start < earliest_date:
-                start = earliest_date
-                logger.info(f"Adjusted start date to earliest available: {start.strftime('%Y-%m-%d')}")
-            if end > latest_date:
-                end = latest_date
-                logger.info(f"Adjusted end date to latest available: {end.strftime('%Y-%m-%d')}")
+            # if start < earliest_date:
+            #     start = earliest_date
+            #     logger.info(f"Adjusted start date to earliest available: {start.strftime('%Y-%m-%d')}")
+            # if end > latest_date:
+            #     end = latest_date
+            #     logger.info(f"Adjusted end date to latest available: {end.strftime('%Y-%m-%d')}")
 
             collection_name = symbol.lower()
             collection = self.db[collection_name]
