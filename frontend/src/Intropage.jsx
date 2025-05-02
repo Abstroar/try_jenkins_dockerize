@@ -17,7 +17,7 @@ function StockGraph({ startDate, endDate, aggregate }) {
   useEffect(() => {
     async function fetchStockData() {
       try {
-        const response = await fetch(`http://127.0.0.1:8000/api/stocks?start_date=${startDate}&end_date=${endDate}&aggregate=${aggregate}`);
+        const response = await fetch(`http://127.0.0.1:8002/api/stocks?start_date=${startDate}&end_date=${endDate}&aggregate=${aggregate}`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

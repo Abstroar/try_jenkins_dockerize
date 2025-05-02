@@ -27,7 +27,7 @@ const StockGraph = ({ symbol = 'AMZN' }) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get(`http://localhost:8000/stocks-graph`, {
+      const response = await axios.get(`http://localhost:8002/stocks-graph`, {
         params: {
           start_date: dateRange.start,
           symbol:symbol,

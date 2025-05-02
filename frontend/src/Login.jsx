@@ -20,7 +20,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://127.0.0.1:8000/login", formData);
+      await axios.post("http://127.0.0.1:8002/login", formData);
       navigate("/portfolio");
     } catch (error) {
       setError(error.response?.data?.detail || "Login failed");

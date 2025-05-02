@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUserProfile = async (token) => {
     try {
-      const response = await axios.get('http://localhost:8000/users/me', {
+      const response = await axios.get('http://localhost:8002/users/me', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUser(response.data);
@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
       formData.append('username', email);
       formData.append('password', password);
 
-      const response = await axios.post('http://localhost:8000/token', formData);
+      const response = await axios.post('http://localhost:8002/token', formData);
       const { access_token } = response.data;
       
       localStorage.setItem('token', access_token);
@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const defaultProfileImage = 'https://www.kindpng.com/picc/m/722-7221920_placeholder-profile-image-placeholder-png-transparent-png.png';
       
-      const response = await axios.post('http://localhost:8000/register', {
+      const response = await axios.post('http://localhost:8002/register', {
         name,
         email,
         password,
@@ -82,7 +82,7 @@ export const AuthProvider = ({ children }) => {
   const updatePortfolio = async (symbols) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.put('http://localhost:8000/portfolio', symbols, {
+      await axios.put('http://localhost:8002/portfolio', symbols, {
         headers: { Authorization: `Bearer ${token}` }
       });
       return true;

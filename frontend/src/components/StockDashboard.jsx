@@ -18,7 +18,7 @@ const StockDetailsPanel = ({ selectedStock }) => {
       const symbol = selectedStock.toUpperCase();
       
       // Get current stock data
-      const response = await axios.get(`http://localhost:8000/api/fetch-stock/${symbol}`);
+      const response = await axios.get(`http://localhost:8002/api/fetch-stock/${symbol}`);
       console.log(response.data);
       if (response.data && response.data.current_price) {
         const currentData = response.data;

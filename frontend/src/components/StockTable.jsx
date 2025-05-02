@@ -9,7 +9,7 @@ const StockTable = ({ onStockSelect }) => {
   useEffect(() => {
     const fetchStocks = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/stocks');
+        const response = await axios.get('http://localhost:8002/api/stocks');
         // Ensure data is properly formatted
         const formattedStocks = response.data.map(stock => ({
           ...stock,
