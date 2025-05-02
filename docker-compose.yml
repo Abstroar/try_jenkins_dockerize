@@ -7,7 +7,7 @@ services:
       - "8002:8000"
     volumes:
       - ./backend:/app
-      - /app/.venv  # Exclude virtualenv from host
+      - /app/.venv 
     environment:
       - PYTHONUNBUFFERED=1
       - PORT=8000

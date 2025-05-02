@@ -81,17 +81,17 @@ class StockDataService:
             earliest_date, latest_date = self.get_available_date_range(symbol)
             
             # If no data in database, try yfinance
-            if not earliest_date or not latest_date:
-                logger.info(f"No data found in database for {symbol}, trying yfinance...")
-                return self.get_stock_data_from_yfinance(start_date, end_date, symbol)
+            # if not earliest_date or not latest_date:
+            #     logger.info(f"No data found in database for {symbol}, trying yfinance...")
+            #     return self.get_stock_data_from_yfinance(start_date, end_date, symbol)
             
             # Check if requested dates are within available range
-            if start > latest_date:
-                logger.info(f"Start date {start_date} is after latest available data, trying yfinance...")
-                return self.get_stock_data_from_yfinance(start_date, end_date, symbol)
-            if end < earliest_date:
-                logger.info(f"End date {end_date} is before earliest available data, trying yfinance...")
-                return self.get_stock_data_from_yfinance(start_date, end_date, symbol)
+            # if start > latest_date:
+            #     logger.info(f"Start date {start_date} is after latest available data, trying yfinance...")
+            #     return self.get_stock_data_from_yfinance(start_date, end_date, symbol)
+            # if end < earliest_date:
+            #     logger.info(f"End date {end_date} is before earliest available data, trying yfinance...")
+            #     return self.get_stock_data_from_yfinance(start_date, end_date, symbol)
             
             # Adjust dates to available range if needed
             if start < earliest_date:
@@ -157,7 +157,4 @@ class StockDataService:
         except Exception as e:
             logger.error(f"Error processing stock data: {str(e)}")
             raise ValueError(f"Error processing stock data: {str(e)}")
-
-    # print("hello")
-    # x = StockDataService().get_stock_data_from_db("2023-01-01", "2023-12-31","amzn",aggregate="daily")
-    # print(x)
+        
