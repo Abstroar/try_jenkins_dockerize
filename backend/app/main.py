@@ -11,12 +11,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import jwt
 from passlib.context import CryptContext
-from home_data import *
 from dotenv import load_dotenv
 from stock_fetcher import fetch_and_store_stock_data
 from stock_data import get_onday_data as get_twelvedata_stock_data
-from time_series_data import TimeSeriesDataService
-from risk_prediction import RiskPredictionService
 from stock_data import get_onday_data
 
 load_dotenv()
@@ -31,7 +28,7 @@ import logging
 import ssl
 import yfinance as yf
 import time
-
+# get stock data
 logger = logging.getLogger(__name__)
 
 class StockDataResponse(BaseModel):
@@ -182,7 +179,81 @@ class StockDataService:
             logger.error(f"Error processing stock data: {str(e)}")
             raise ValueError(f"Error processing stock data: {str(e)}")
         
+## home_data
+from pymongo import MongoClient
+from datetime import datetime
+from .stock_data import get_onday_data as get_stock_data # Import your function to fetch stock data
+# Import your API function
+# from your_api_module import fetch_stock_data
+import logging
 
+logger = logging.getLogger(__name__)
+
+# Connect to MongoDB
+client = MongoClient(
+    "mongodb+srv://abhilaksh:DVH1RDrl4DBUTCaA@capstone.vwbejki.mongodb.net/?retryWrites=true&w=majority&appName=Capstone",
+    ssl=True,
+    tlsAllowInvalidCertificates=True,
+    serverSelectionTimeoutMS=5000,
+    connectTimeoutMS=10000,
+    socketTimeoutMS=10000,
+    retryWrites=True,
+    retryReads=True
+)
+db = client["stock_database"]
+collection = db["stock_data"]
+
+STOCK_SYMBOLS = ["AAPL", "MSFT", "GOOG", "AMZN", "TSLA", "META", "NFLX", "NVDA"]
+
+def refresh_or_get_stock(symbol: str):
+    today_date = datetime.now().date()
+
+    stock = collection.find_one({"symbol": symbol.upper()})
+
+    if stock:
+        stored_date = stock["date"].date()
+
+        if stored_date == today_date:
+            # print(f"Data for {symbol} is already fresh.")
+            return stock  # return the existing fresh stock
+        else:
+            # print(f"Updating data for {symbol} (outdated).")
+            fresh_data = get_stock_data(symbol)
+            collection.update_one(
+                {"symbol": symbol},
+                {"$set": fresh_data},
+                upsert=True
+            )
+            return fresh_data  # return fresh data
+
+    else:
+        # print(f"No data found for {symbol}, fetching new data.")
+        fresh_data = get_stock_data(symbol)
+        collection.insert_one(fresh_data)
+        return fresh_data
+
+def get_all_stocks_data():
+    all_data = []
+    for symbol in STOCK_SYMBOLS:
+        try:
+            stock_data = refresh_or_get_stock(symbol)
+            all_data.append(stock_data)
+        except Exception as e:
+            print(f"Failed to fetch/update {symbol}: {str(e)}")
+    return all_data
+
+def clean_stock_data(stock: dict) -> dict:
+    return {
+        "symbol": stock["symbol"],
+        "current_price": stock["current_price"],
+        "open_price": stock["open_price"],
+        "high_price": stock["high_price"],
+        "low_price": stock["low_price"],
+        "volume": stock["volume"],
+        "date": stock["date"].strftime("%Y-%m-%d")}
+
+
+## 
 
 
 
@@ -324,36 +395,8 @@ def get_all_stocks():
 
 @app.get("/api/risk-prediction/{symbol}")
 async def get_risk_prediction(symbol: str):
-    time_series_service = TimeSeriesDataService()
-    risk_prediction_service = RiskPredictionService()
-    try:
-        # Get time series data for the last 90 days
-        end_date = datetime.now()
-        start_date = end_date - timedelta(days=90)
-        
-        time_series_data = time_series_service.get_time_series_data(
-            symbol,
-            start_date.strftime("%Y-%m-%d"),
-            end_date.strftime("%Y-%m-%d")
-        )
-        
-        if not time_series_data:
-            return {
-                "status": "error",
-                "message": "Not enough historical data for risk prediction"
-            }
-        
-        # Get risk prediction
-        risk_prediction = risk_prediction_service.predict_risk(time_series_data)
-        
-        return {
-            "status": "success",
-            "data": risk_prediction
-        }
-        
-    except Exception as e:
-        print(f"Error in get_risk_prediction: {str(e)}")
-        return {"status": "error", "message": "Internal server error"}
+    return "Mediam risk"
+
 
 
 @app.get('/api/fetch-stock/{symbol}')
