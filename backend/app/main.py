@@ -467,3 +467,35 @@ def fetch_stock(symbol):
     except Exception as e:
         print(f"Error in fetch_stock: {str(e)}")
         return {"status": "error", "message": "Internal server error"}
+
+
+import tensorflow as tf
+import numpy as np
+from alpha_vantage.timeseries import TimeSeries
+import pandas
+
+@app.get('/risk/{symbol}')
+def load_and_predict_with_current_price(symbol, model_path_dir="./", api_key="PKSARG796MUFC2RK"):
+    lstm_model = tf.keras.models.load_model(f"lstm_model.h5")
+
+
+
+    ts = TimeSeries(key=api_key, output_format='pandas', indexing_type='date')
+    data, _ = ts.get_intraday(symbol=symbol, interval='15min', outputsize='compact')
+    data = data.rename(columns={'4. close': 'current_price'})
+    data = data.sort_index()  
+
+
+    prices = data['current_price'].dropna().values[-50:]
+    if len(prices) < 50:
+        raise ValueError(f"Not enough data points for {symbol}. Need at least 50, got {len(prices)}")
+
+
+    lstm_input = np.reshape(prices, (1, 50, 1))
+    rf_input = prices.reshape(1, -1)
+
+    lstm_prediction = float(lstm_model.predict(lstm_input)[0][0])
+
+    actual_latest_price = float(prices[-1])
+
+    return {lstm_prediction}

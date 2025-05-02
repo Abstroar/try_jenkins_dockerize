@@ -7,6 +7,7 @@ const StockDetailsPanel = ({ selectedStock }) => {
   const [stockDetails, setStockDetails] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [riskPrediction, setRiskPrediction] = useState(null);
 
   const fetchStockDetails = async () => {
     if (!selectedStock) return;
@@ -49,8 +50,20 @@ const StockDetailsPanel = ({ selectedStock }) => {
     }
   };
 
+  const fetchRiskPrediction = async () => {
+    if (!selectedStock) return;
+    try {
+      const response = await axios.get(`http://localhost:8002/risk/${selectedStock}`);
+      setRiskPrediction(response.data);
+    } catch (err) {
+      console.error('Error fetching risk prediction:', err);
+      setRiskPrediction('Error fetching risk prediction');
+    }
+  };
+
   useEffect(() => {
     fetchStockDetails();
+    fetchRiskPrediction();
   }, [selectedStock]);
 
   if (loading) return <div className="text-white">Loading stock data...</div>;
@@ -77,6 +90,7 @@ const StockDetailsPanel = ({ selectedStock }) => {
             <p>Low: ${stockDetails.low?.toFixed(2) || 'N/A'}</p>
             <p>Volume: {stockDetails.volume ? stockDetails.volume.toLocaleString() : 'N/A'}</p>
             <p>Last Updated: {stockDetails.date ? new Date(stockDetails.date).toLocaleString() : 'N/A'}</p>
+            <p>Risk Prediction: {riskPrediction || 'Loading...'}</p>
           </div>
         ) : (
           <div className="text-gray-400">No data available</div>
