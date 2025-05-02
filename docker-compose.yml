@@ -11,7 +11,7 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - PORT=8000
-    restart: unless-stopped
+    restart: no
     networks:
       - app-network
 
